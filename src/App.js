@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import './App.css';
+import NamePicker from './NamePicker.js';
 
 function App() {
 	const [messages, setMessages] = useState([]);
 
-	console.log(messages);
+	//console.log(messages);
 	return (
 		<main>
 			<header>
@@ -14,6 +15,7 @@ function App() {
 					src="https://www.freeiconspng.com/uploads/christmas-flake-geometric-hexagon-holiday-line-snow---3.png"
 				/>
 				Chatter
+				<NamePicker />
 			</header>
 
 			<div className="messages">

@@ -1,28 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import NamePicker from './NamePicker.js';
+import { db } from './db.js';
+import NamePicker from './namePicker.js';
 
 function App() {
 	const [messages, setMessages] = useState([]);
-
+	const [name, setName] = useState('');
 	//console.log(messages);
+
+	useEffect(() => {
+		//use to have your app run some code only one time
+		db.listen({
+			// any time a message is added
+			receive: m => {
+				setMessages(current => [m, ...current]); // use set messages function, but this time use alt syntax to pass in a function with current state
+			}
+		});
+	}, []);
+
 	return (
 		<main>
 			<header>
-				<img
-					className="logo"
-					alt="logo"
-					src="https://www.freeiconspng.com/uploads/christmas-flake-geometric-hexagon-holiday-line-snow---3.png"
-				/>
-				Chatter
-				<NamePicker />
+				<div>
+					<img
+						className="logo"
+						alt="logo"
+						src="https://www.freeiconspng.com/uploads/christmas-flake-geometric-hexagon-holiday-line-snow---3.png"
+					/>
+					Chatter
+				</div>
+				<NamePicker onSave={setName} />
 			</header>
 
 			<div className="messages">
 				{messages.map((m, i) => {
 					return (
 						<div key={i} className="message-wrap">
-							<div className="message">{m}</div>
+							{/*<div className="username"><{}</div>*/}
+							<div className="message">{m.text}</div>
 						</div>
 					);
 				})}
@@ -30,7 +45,11 @@ function App() {
 
 			<TextInput
 				onSend={text => {
-					setMessages([text, ...messages]);
+					db.send({
+						text,
+						name,
+						ts: new Date()
+					});
 				}}
 			/>
 		</main>

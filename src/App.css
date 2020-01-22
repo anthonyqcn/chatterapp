@@ -32,10 +32,16 @@ header {
 	width: 100%;
 	height: 48px;
 	border-bottom: 1px solid white;
-	color: #2674a3;
+	color: white;
 	padding: 0px 10px;
 	background: rgba(255, 255, 255, 0.5);
 
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+header div {
 	display: flex;
 	align-items: center;
 }

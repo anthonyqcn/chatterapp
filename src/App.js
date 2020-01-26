@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { db } from './db.js';
+import { db, useDB } from './db.js';
 import NamePicker from './namePicker.js';
+import { Browser, Route, BrowserRouter } from 'react-router-dom';
 
 function App() {
-	const [messages, setMessages] = useState([]);
+	useEffect(() => {
+		const { pathname } = window.location;
+		if (pathname.length < 2) window.location.pathname = 'home';
+	}, []);
+	return (
+		<BrowserRouter>
+			<Route path="/:room" component={Room} />
+		</BrowserRouter>
+	);
+}
+
+function Room(props) {
+	const { room } = props.match.params;
+	const messages = useDB(room);
 	const [name, setName] = useState('');
 	//console.log(messages);
-
-	useEffect(() => {
-		//use to have your app run some code only one time
-		db.listen({
-			// any time a message is added
-			receive: m => {
-				setMessages(current => [m, ...current]); // use set messages function, but this time use alt syntax to pass in a function with current state
-			}
-		});
-	}, []);
 
 	return (
 		<main>
@@ -35,9 +39,15 @@ function App() {
 			<div className="messages">
 				{messages.map((m, i) => {
 					return (
-						<div key={i} className="message-wrap">
-							{/*<div className="username"><{}</div>*/}
-							<div className="message">{m.text}</div>
+						<div
+							key={i}
+							className="message-wrap"
+							from={m.name === name ? 'me' : 'you'}
+						>
+							<div className="message">
+								<div className="msg-name">{m.name}</div>
+								<div className="msg-text">{m.text}</div>
+							</div>
 						</div>
 					);
 				})}
@@ -48,7 +58,8 @@ function App() {
 					db.send({
 						text,
 						name,
-						ts: new Date()
+						ts: new Date(),
+						room
 					});
 				}}
 			/>

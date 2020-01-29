@@ -3,6 +3,16 @@ import './App.css';
 import { db, useDB } from './db.js';
 import NamePicker from './namePicker.js';
 import { Browser, Route, BrowserRouter } from 'react-router-dom';
+import Camera from 'react-snap-pic';
+import TextInput from './textinput.js';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/storage';
+
+// function takePicture(img) {
+// 	console.log(img);
+// 	return setShowCamera(false);
+// }
 
 function App() {
 	useEffect(() => {
@@ -20,10 +30,15 @@ function Room(props) {
 	const { room } = props.match.params;
 	const messages = useDB(room);
 	const [name, setName] = useState('');
-	//console.log(messages);
+	const [showCamera, setShowCamera] = useState(false);
+	function takePicture(img) {
+		setShowCamera(false);
+		return console.log(img);
+	}
 
 	return (
 		<main>
+			{showCamera && <Camera takePicture={takePicture} />}
 			<header>
 				<div>
 					<img
@@ -62,39 +77,9 @@ function Room(props) {
 						room
 					});
 				}}
+				showCamera={() => setShowCamera(true)}
 			/>
 		</main>
-	);
-}
-
-function TextInput(props) {
-	var [text, setText] = useState('');
-	// normal js comment
-	return (
-		<div className="text-input-wrap">
-			<input
-				value={text}
-				className="text-input"
-				placeholder="Type your message here"
-				onChange={e => setText(e.target.value)}
-				onKeyPress={e => {
-					if (e.key === 'Enter') {
-						if (text) props.onSend(text);
-						setText('');
-					}
-				}}
-			/>
-			<button
-				onClick={() => {
-					if (text) props.onSend(text);
-					setText('');
-				}}
-				className="button"
-				disabled={!text}
-			>
-				SEND
-			</button>
-		</div>
 	);
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import './media.css'; // overwrites previous styles
 import { db, useDB } from './db.js';
 import NamePicker from './namePicker.js';
 import { Browser, Route, BrowserRouter } from 'react-router-dom';
@@ -8,6 +9,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { MdSend, MdCamera } from 'react-icons/md';
+import Div100vh from 'react-div-100vh';
 
 // function takePicture(img) {
 // 	console.log(img);
@@ -43,7 +45,7 @@ function Room(props) {
 	}
 
 	return (
-		<main>
+		<Div100vh>
 			{showCamera && <Camera takePicture={takePicture} />}
 			<header>
 				<div>
@@ -74,7 +76,7 @@ function Room(props) {
 				}}
 				showCamera={() => setShowCamera(true)}
 			/>
-		</main>
+		</Div100vh>
 	);
 }
 
